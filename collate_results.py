@@ -3,7 +3,7 @@ from statistics import mean
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-
+import numpy as np
 
 occupations = ["biologist","ceo","cook","engineer","nurse","police_officer","primary_school_teacher","programmer","software_developer","truck_driver"]
 
@@ -15,7 +15,7 @@ def main():
             for line in f:
                 line = line.strip()
                 d = line.split(",")
-                system_tag =  d[0]
+                system_tag =  d[0].replace(".txt","")
                 relevance = float(d[1])
                 fairness = float(d[2])
                 
@@ -23,12 +23,14 @@ def main():
                 m.append(relevance)
                 overall_relevance[system_tag] = m
                 
-                n = overall_relevance.get(system_tag,[])
+                n = overall_fairness.get(system_tag,[])
                 n.append(fairness)
-                overall_relevance[system_tag] = n
+                overall_fairness[system_tag] = n
     
-    systems = overall_relevance.keys()
+    
+    systems = list(overall_relevance.keys())
     systems.sort()
+
     with open("./profession/overall_results.txt","w") as f:
         for system in systems:
             f.write(system+","+str(mean(overall_relevance[system]))+","+str(mean(overall_fairness[system]))+"\n")
@@ -44,8 +46,8 @@ def main():
     plt.legend(loc='center', fontsize='xx-small',bbox_to_anchor=(0.5, 1.05),ncol=len(systems)-3)
     plt.xlabel("Unfairness (NDKL)")
     plt.ylabel("Relevance")
-    plt.savefig('./profession/overall-plot.pdf')
+    plt.savefig('./profession/overall-plot.png')
     
 if __name__=="__main__":
-	main()
+    main()
                 

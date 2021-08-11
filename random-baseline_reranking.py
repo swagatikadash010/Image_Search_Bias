@@ -7,13 +7,10 @@ import pandas as pd
 import json
 import random
 
-seed = 1234
-random.seed(seed)
-
 
 def get_random_based_ranking(df):
     ranked_list = df["Image_Names"].tolist()
-    for i in range(30):
+    for i in range(10):     
         random.shuffle(ranked_list)
     return ranked_list
 

@@ -69,11 +69,9 @@ def main():
     
     corpus_dist = compute_gender_distribution(list(ground_truth_gender.values()))
     runs_all = []
-    result_file = open("./results/results.txt","w")
     
     relevance_data = {}
     fairness_data = {}
-    
     for fn in os.listdir(runs_dir):
         if "txt" in fn:
             runs_all.append(fn.replace(".txt",""))
@@ -84,10 +82,15 @@ def main():
                     ranked_list.append(line)
             relevance = compute_bucket_ranking_accuracy(ranked_list, ground_truth_relevance)
             gender_list = [ground_truth_gender[document] for document in ranked_list]
-            fairness = normalized_discounted_kl_div(gender_list, corpus_dist)
-            result_file.write(f"{fn},{relevance},{fairness}\n")
+            fairness = normalized_discounted_kl_div(gender_list, corpus_dist)            
             relevance_data[fn.replace(".txt","")] = relevance
             fairness_data[fn.replace(".txt","")] = fairness
+    
+    
+    runs_all.sort()
+    result_file = open("./results/results.txt","w")
+    for rk in runs_all:
+        result_file.write(rk+","+str(relevance_data[rk])+","+str(fairness_data[rk])+"\n")
     result_file.close()
     
     # now plot
@@ -102,8 +105,9 @@ def main():
     txt = f"Population Dist P(male,female) = {corpus_dist}"
     plt.xlabel(f"Unfairness (NDKL)\n{txt}", fontsize='xx-small')
     plt.ylabel("Relevance")
-    plt.savefig('./results/performance-plot.pdf')
+    plt.savefig('./results/performance-plot.png')
 
 if __name__=="__main__":
     main()
+    exit(0)
     
