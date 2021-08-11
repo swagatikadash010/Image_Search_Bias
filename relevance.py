@@ -26,16 +26,20 @@ def compute_relevance_cost(object_list, term_list):
     term_words = []
     for ol in object_list:
         ol = ol.strip().replace("_", " ").lower()
-        object_words += ol.split()
+        for word in ol.split():
+            if word in w2v_model.key_to_index:
+                object_words.append(word) 
 
     for tl in term_list:
         tl = tl.strip().replace("_", " ").lower()
-        term_words += tl.split()
+        for word in tl.split():
+            if word in w2v_model.key_to_index:
+                term_words.append(word)
 
-    # print("Printing object_words")
-    # print(object_words)
-    # print("Printing term words")
-    # print(term_words)
+    #print("Printing object_words")
+    #print(object_words)
+    #print("Printing term words")
+    #print(term_words)
     relevance_cost = 1 - w2v_model.n_similarity(object_words, term_words)
     return relevance_cost
 

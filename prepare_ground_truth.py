@@ -48,13 +48,13 @@ def prepare_ground_truth_relevance(df):
 
 
 def prepare_ground_truth_gender(df):
-    df1 = df[["Image_Names", "Gold_Gender"]]
-    corpus_dist = compute_gender_distribution(df1['Gold_Gender'].tolist())
+    df1 = df[["Image_Names", "GroundTruth_Gender"]]
+    corpus_dist = compute_gender_distribution(df1['GroundTruth_Gender'].tolist())
     gender_data = []
     for i in df1.index:
-        if df1["Gold_Gender"][i].strip() == "Male":
+        if df1["GroundTruth_Gender"][i].strip() == "Male":
             d = df1["Image_Names"][i] + ",Male"
-        elif df1["Gold_Gender"][i].strip() == "Female":
+        elif df1["GroundTruth_Gender"][i].strip() == "Female":
             d = df1["Image_Names"][i] + ",Female"
         else:
             draw = nprand.choice(["Male","Female"],1,corpus_dist)

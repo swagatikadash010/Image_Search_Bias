@@ -85,7 +85,7 @@ def main():
             relevance = compute_bucket_ranking_accuracy(ranked_list, ground_truth_relevance)
             gender_list = [ground_truth_gender[document] for document in ranked_list]
             fairness = normalized_discounted_kl_div(gender_list, corpus_dist)
-            result_file.write(f"{fn} : {relevance} , {fairness}")
+            result_file.write(f"{fn},{relevance},{fairness}\n")
             relevance_data[fn.replace(".txt","")] = relevance
             fairness_data[fn.replace(".txt","")] = fairness
     result_file.close()
@@ -99,7 +99,8 @@ def main():
             label=run, s=50)
 
     plt.legend(loc='center', fontsize='xx-small',bbox_to_anchor=(0.5, 1.05),ncol=len(runs_all)-3)
-    plt.xlabel("Unfairness (NDKL)")
+    txt = f"Population Dist P(male,female) = {corpus_dist}"
+    plt.xlabel(f"Unfairness (NDKL)\n{txt}", fontsize='xx-small')
     plt.ylabel("Relevance")
     plt.savefig('./results/performance-plot.pdf')
 
